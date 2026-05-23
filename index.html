@@ -8,14 +8,13 @@
     <script src="https://unpkg.com/three@0.147.0/examples/js/loaders/RGBELoader.js"></script>
     
     <script>
-        // Registrace komponenty pro výpočet odlesků na PBR materiálech
         AFRAME.registerComponent('hdr-environment', {
             schema: { url: { type: 'string' } },
             init: function () {
                 const scene = this.el.sceneEl.object3D;
                 new THREE.RGBELoader().load(this.data.url, (texture) => {
                     texture.mapping = THREE.EquirectangularReflectionMapping;
-                    scene.environment = texture;
+                    scene.environment = texture; 
                 });
             }
         });
@@ -50,12 +49,13 @@
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         <a-entity mindar-image-target="targetIndex: 0">
-            <a-plane src="#rytmusVideo" width="1" height="1.41" position="0 0 0" rotation="0 0 0"></a-plane>
+            <a-gltf-model src="#kiwiModel" position="0 0 0.1" scale="0.1 0.1 0.1"></a-gltf-model>
         </a-entity>
 
         <a-entity mindar-image-target="targetIndex: 1">
-            <a-gltf-model src="#kiwiModel" position="0 0 0.1" scale="0.1 0.1 0.1"></a-gltf-model>
+            <a-plane material="src: #rytmusVideo; shader: flat;" width="1" height="1.41" position="0 0 0" rotation="0 0 0"></a-plane>
         </a-entity>
+
     </a-scene>
 
     <script>
@@ -68,15 +68,15 @@
             button.style.display = 'none';
         });
 
-        // Automatické zastavení a spuštění videa podle detekce cíle
+        // Úprava indexu pro spuštění videa - nyní detekuje cíl 1
         sceneEl.addEventListener("targetFound", event => {
-            if (event.detail.targetIndex === 0) {
+            if (event.detail.targetIndex === 1) {
                 video.play();
             }
         });
 
         sceneEl.addEventListener("targetLost", event => {
-            if (event.detail.targetIndex === 0) {
+            if (event.detail.targetIndex === 1) {
                 video.pause();
             }
         });
