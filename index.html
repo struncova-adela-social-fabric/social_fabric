@@ -42,13 +42,28 @@
         vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         
         <a-assets>
-            <video id="rytmusVideo" src="rytmus.mp4" preload="auto" loop="true" muted playsinline webkit-playsinline crossorigin="anonymous"></video>
+            <video id="vid1" src="1_str.mp4" preload="auto" loop="true" muted playsinline webkit-playsinline crossorigin="anonymous"></video>
+            <video id="vid2" src="2_str.mp4" preload="auto" loop="true" muted playsinline webkit-playsinline crossorigin="anonymous"></video>
+            <video id="vid3" src="3_str.mp4" preload="auto" loop="true" muted playsinline webkit-playsinline crossorigin="anonymous"></video>
+            
             <a-asset-item id="kiwiModel" src="./kiwi.glb"></a-asset-item>
         </a-assets>
 
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         <a-entity mindar-image-target="targetIndex: 0">
+            <a-plane material="src: #vid1; shader: flat;" width="1" height="1.41" position="0 0 0" rotation="0 0 0"></a-plane>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 1">
+            <a-plane material="src: #vid2; shader: flat;" width="1" height="1.41" position="0 0 0" rotation="0 0 0"></a-plane>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 2">
+            <a-plane material="src: #vid3; shader: flat;" width="1" height="1.41" position="0 0 0" rotation="0 0 0"></a-plane>
+        </a-entity>
+
+        <a-entity mindar-image-target="targetIndex: 3">
             <a-gltf-model 
                 src="#kiwiModel" 
                 position="0 0 0.15" 
@@ -57,33 +72,37 @@
             </a-gltf-model>
         </a-entity>
 
-        <a-entity mindar-image-target="targetIndex: 1">
-            <a-plane material="src: #rytmusVideo; shader: flat;" width="1" height="1.41" position="0 0 0" rotation="0 0 0"></a-plane>
-        </a-entity>
-
     </a-scene>
 
     <script>
-        const video = document.getElementById('rytmusVideo');
+        const v1 = document.getElementById('vid1');
+        const v2 = document.getElementById('vid2');
+        const v3 = document.getElementById('vid3');
         const button = document.getElementById('ar-button');
         const sceneEl = document.querySelector('a-scene');
 
+        // Tlačítko inicializuje přehrávání všech videí (vyžadováno prohlížeči)
         button.addEventListener('click', () => {
-            video.play();
+            v1.play();
+            v2.play();
+            v3.play();
             button.style.display = 'none';
         });
 
-        // Úprava indexu pro spuštění videa - detekuje cíl 1
+        // Řízení spouštění konkrétního videa po detekci příslušného markeru
         sceneEl.addEventListener("targetFound", event => {
-            if (event.detail.targetIndex === 1) {
-                video.play();
-            }
+            const index = event.detail.targetIndex;
+            if (index === 0) v1.play();
+            if (index === 1) v2.play();
+            if (index === 2) v3.play();
         });
 
+        // Zastavení videa při ztrátě markeru z dohledu kamery
         sceneEl.addEventListener("targetLost", event => {
-            if (event.detail.targetIndex === 1) {
-                video.pause();
-            }
+            const index = event.detail.targetIndex;
+            if (index === 0) v1.pause();
+            if (index === 1) v2.pause();
+            if (index === 2) v3.pause();
         });
     </script>
 </body>
