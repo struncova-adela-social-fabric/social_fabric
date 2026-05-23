@@ -5,6 +5,22 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     
+    <script src="https://unpkg.com/three@0.147.0/examples/js/loaders/RGBELoader.js"></script>
+    
+    <script>
+        // Registrace komponenty pro výpočet odlesků na PBR materiálech
+        AFRAME.registerComponent('hdr-environment', {
+            schema: { url: { type: 'string' } },
+            init: function () {
+                const scene = this.el.sceneEl.object3D;
+                new THREE.RGBELoader().load(this.data.url, (texture) => {
+                    texture.mapping = THREE.EquirectangularReflectionMapping;
+                    scene.environment = texture;
+                });
+            }
+        });
+    </script>
+    
     <style>
         body { margin: 0; overflow: hidden; background-color: #000; }
         .mindar-ui-overlay, .mindar-ui-scanning, .mindar-ui-loading { display: none !important; }
@@ -21,6 +37,7 @@
 
     <a-scene 
         mindar-image="imageTargetSrc: ./targets.mind; uiScanning: no; uiLoading: no; filterMinCF: 0.0005; filterBeta: 0.001;" 
+        hdr-environment="url: ./studio.hdr"
         loading-screen="enabled: false"
         color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights: true" 
         vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
