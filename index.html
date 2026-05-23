@@ -20,7 +20,7 @@
     <button id="ar-button">POKRAČOVAT DO AR</button>
 
     <a-scene 
-        mindar-image="imageTargetSrc: ./targets.mind; uiScanning: no; uiLoading: no; filterMinCF: 0.00001; filterBeta: 0.0001; missTolerance: 10;" 
+        mindar-image="imageTargetSrc: ./targets.mind; uiScanning: no; uiLoading: no; filterMinCF: 0.0005; filterBeta: 0.001;" 
         loading-screen="enabled: false"
         color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights: true" 
         vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
@@ -33,7 +33,7 @@
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
         <a-entity mindar-image-target="targetIndex: 0">
-            <a-plane src="#rytmusVideo" width="1" height="1.41" position="0 0 0.01" rotation="0 0 0"></a-plane>
+            <a-plane src="#rytmusVideo" width="1" height="1.41" position="0 0 0" rotation="0 0 0"></a-plane>
         </a-entity>
 
         <a-entity mindar-image-target="targetIndex: 1">
@@ -51,6 +51,7 @@
             button.style.display = 'none';
         });
 
+        // Automatické zastavení a spuštění videa podle detekce cíle
         sceneEl.addEventListener("targetFound", event => {
             if (event.detail.targetIndex === 0) {
                 video.play();
